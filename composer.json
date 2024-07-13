@@ -9,7 +9,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "illuminate/support": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0",
+        "illuminate/support": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
         "php-http/discovery": "^1.15",
         "psr/http-client-implementation": "*",
         "psr/http-factory-implementation": "*"
