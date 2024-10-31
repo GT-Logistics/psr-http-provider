@@ -2,8 +2,12 @@
 
 namespace Gtlogistics\PsrHttpProvider;
 
+use Barryvdh\Debugbar\LaravelDebugbar;
+use Gtlogistics\PsrHttpProvider\Profiler\PsrHttpDebugbarProfilerPlugin;
+use Http\Client\Common\PluginClient;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -44,5 +48,14 @@ class PsrHttpServiceProvider extends ServiceProvider
         $this->app->singleton(ClientInterface::class, static function () {
             return Psr18ClientDiscovery::find();
         });
+
+        // Register the profiler
+        if ($this->app->has(LaravelDebugbar::class)) {
+            $this->app->extend(ClientInterface::class, static function (ClientInterface $client, Application $app) {
+                return new PluginClient($client, [
+                    new PsrHttpDebugbarProfilerPlugin($app->get(LaravelDebugbar::class)),
+                ]);
+            });
+        }
     }
 }
