@@ -17,6 +17,7 @@ use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
+use Webmozart\Assert\Assert;
 
 class PsrHttpServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,9 @@ class PsrHttpServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Automatically apply the package configuration
+        $this->mergeConfigFrom(__DIR__ . '/../config/laravel.php', 'http');
+
         // PSR-17 Factories
         $this->app->singleton(UriFactoryInterface::class, static function () {
             return Psr17FactoryDiscovery::findUriFactory();
@@ -53,10 +57,30 @@ class PsrHttpServiceProvider extends ServiceProvider
         // Register the profiler
         if ($this->app->has(LaravelDebugbar::class)) {
             $this->app->extend(ClientInterface::class, static function (ClientInterface $client, Application $app) {
-                return new PluginClient($client, [
-                    new PsrHttpDebugbarProfilerPlugin($app->get(LaravelDebugbar::class)),
-                    new PsrHttpDebugbarLoggerPlugin($app->get(LaravelDebugbar::class)),
-                ]);
+                $canProfile = config('http.debugbar.profile');
+                $canLogBodies = config('http.debugbar.log_bodies');
+
+                Assert::boolean($canProfile);
+                Assert::boolean($canLogBodies);
+
+                $middlewares = [];
+                if ($canProfile) {
+                    $middlewares[] = new PsrHttpDebugbarProfilerPlugin($app->get(LaravelDebugbar::class));
+                }
+                if ($canLogBodies) {
+                    $maxBodySize = config('http.debugbar.max_body_size');
+
+                    Assert::integer($maxBodySize);
+                    Assert::greaterThanEq($maxBodySize, 0);
+
+                    $middlewares[] = new PsrHttpDebugbarLoggerPlugin($app->get(LaravelDebugbar::class), $maxBodySize);
+                }
+
+                if (count($middlewares) === 0) {
+                    return $client;
+                }
+
+                return new PluginClient($client, $middlewares);
             });
         }
     }

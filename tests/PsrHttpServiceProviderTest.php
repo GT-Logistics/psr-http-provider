@@ -2,7 +2,9 @@
 
 namespace Gtlogistics\PsrHttpProvider\Tests;
 
+use Barryvdh\Debugbar;
 use Gtlogistics\PsrHttpProvider\PsrHttpServiceProvider;
+use Http\Client\Common\PluginClient;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Orchestra\Testbench\TestCase;
 use Psr\Http\Client\ClientInterface;
@@ -19,6 +21,7 @@ class PsrHttpServiceProviderTest extends TestCase
     protected function getPackageProviders($app): array
     {
         return [
+            Debugbar\ServiceProvider::class,
             PsrHttpServiceProvider::class,
         ];
     }
@@ -53,6 +56,6 @@ class PsrHttpServiceProviderTest extends TestCase
         // PSR-18 Client
         $client = $this->app->make(ClientInterface::class);
         self::assertInstanceOf(ClientInterface::class, $client);
-        self::assertInstanceOf(Psr18Client::class, $client);
+        self::assertInstanceOf(PluginClient::class, $client);
     }
 }
