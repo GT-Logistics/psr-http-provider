@@ -3,6 +3,7 @@
 namespace Gtlogistics\PsrHttpProvider;
 
 use Barryvdh\Debugbar\LaravelDebugbar;
+use Gtlogistics\PsrHttpProvider\Logger\PsrHttpDebugbarLoggerPlugin;
 use Gtlogistics\PsrHttpProvider\Profiler\PsrHttpDebugbarProfilerPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\Psr17FactoryDiscovery;
@@ -54,6 +55,7 @@ class PsrHttpServiceProvider extends ServiceProvider
             $this->app->extend(ClientInterface::class, static function (ClientInterface $client, Application $app) {
                 return new PluginClient($client, [
                     new PsrHttpDebugbarProfilerPlugin($app->get(LaravelDebugbar::class)),
+                    new PsrHttpDebugbarLoggerPlugin($app->get(LaravelDebugbar::class)),
                 ]);
             });
         }
