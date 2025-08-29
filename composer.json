@@ -9,20 +9,20 @@
     ],
     "require": {
         "php": ">=7.4",
-        "illuminate/support": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/support": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
         "php-http/client-common": "^2.7",
         "php-http/discovery": "^1.15",
         "psr/http-client-implementation": "*",
         "psr/http-factory-implementation": "*"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.7",
+        "barryvdh/laravel-debugbar": "^3.16",
         "nyholm/psr7": "^1.8",
-        "orchestra/testbench": "^3.8|^6.40",
-        "phpunit/phpunit": "^8.5|^10.1",
+        "orchestra/testbench": "^3.8|^10.6",
+        "phpunit/phpunit": "^8.5|^12.3",
         "psr/http-client": "^1.0",
         "psr/http-factory": "^1.0",
-        "symfony/http-client": "^5.4"
+        "symfony/http-client": "^5.4|^7.3"
     },
     "minimum-stability": "stable",
     "autoload": {

@@ -14,7 +14,6 @@ use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
-use Symfony\Component\HttpClient\Psr18Client;
 
 class PsrHttpServiceProviderTest extends TestCase
 {
